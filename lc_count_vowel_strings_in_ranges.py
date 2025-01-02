@@ -15,12 +15,12 @@ class Solution:
         return 1 if (s[0] in "aeiou" and s[-1] in "aeiou") else 0
     
     def vowelStrings(self, words: List[str], queries: List[List[int]]) -> List[int]:
-        prefix_sums = {-1: 0}
-        for i, word in enumerate(words):
+        prefix_sums = [0] * (len(words) + 1)
+        for i, word in enumerate(words, start=1):
             prefix_sums[i] = prefix_sums[i - 1] + Solution.is_vowelStrings(word)
         res = []
         for l, r in queries:
-            res.append(prefix_sums[r] - prefix_sums[l-1])
+            res.append(prefix_sums[r+1] - prefix_sums[l])
         return res
 
 
