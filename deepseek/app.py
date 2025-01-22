@@ -7,9 +7,17 @@
 
 import streamlit as st
 import pandas as pd
+import pprint
+import time
 
+from llm_template import Param, formatted_prompt
 
-col1, col2 = st.columns([1, 1])
+st.set_page_config(layout="wide")
+
+col1, col2, col3 = st.columns(3)
+
+if "prompt" not in st.session_state:
+    st.session_state.prompt = ""
 
 if "code" not in st.session_state:
     st.session_state.code = ""
@@ -18,7 +26,7 @@ with col1:
     function_name = st.text_input(label="Function name")
     print(function_name)
 
-    st.text_area(label="Description")
+    description = st.text_area(label="Description", height=200)
     st.write("Parameters")
     df_params = st.data_editor(
         data=pd.DataFrame(columns=["name", "type", "description"]),
@@ -34,22 +42,42 @@ with col1:
         use_container_width=True
     )
 
-    generate = st.container()
-    with generate:
-        if st.button("Generate Code"):
-            st.session_state.code = """import streamlit as st
-print("HELLO@WORLD")
-"""
+    generate_prompt = st.container()
+    with generate_prompt:
+        if st.button("Generate Prompt"):
+            parameters = [
+                Param(
+                    name=n,
+                    type=t,
+                    description=d,
+                ) for (n, t, d) in df_params.itertuples(index=False)
+            ]
+            returns = [
+                Param(
+                    name=n,
+                    type=t,
+                    description=d,
+                ) for (n, t, d) in df_returns.itertuples(index=False)
+            ]
+            st.session_state.prompt = formatted_prompt(
+                function_name, description, parameters, returns
+            )
+            
 
 
 
 with col2:
-    st.write("Generated code")
+    st.write("Prompt")
+    if st.session_state.prompt:
+        st.code(st.session_state.prompt)
 
-    st.code(body=st.session_state["code"])
-    st.write(st.session_state["params"])
-    res = exec(st.session_state.code)
-    st.write(res)
+    # st.code(body=st.session_state["code"])
+    # st.write(st.session_state["params"])
+    # res = exec(st.session_state.code)
+    # st.write(res)
+
+with col3:
+    st.write("Code")
     
 
     
