@@ -140,3 +140,4 @@ cython_debug/
 # poetry
 poetry.lock
 poetry.toml
+node_modules
