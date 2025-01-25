@@ -12,6 +12,7 @@ import time
 
 from llm_template import Param, formatted_prompt
 
+
 st.set_page_config(layout="wide")
 
 col1, col2, col3 = st.columns(3)
@@ -62,8 +63,6 @@ with col1:
             st.session_state.prompt = formatted_prompt(
                 function_name, description, parameters, returns
             )
-            
-
 
 
 with col2:
