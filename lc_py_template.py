@@ -8,6 +8,11 @@ from collections import (
     deque,
 )
 
+from lc_py_tools import (
+    TreeNode,
+    BinaryTree,
+)
+
 
 class Solution:
     def some_problem(self, **kwargs: dict):
